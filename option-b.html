@@ -8,7 +8,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500;600&family=Caveat:wght@500&display=swap">
-<noscript><style>.reveal { opacity: 1 !important; transform: none !important; }</style></noscript>
+<noscript><style>
+  .reveal { opacity: 1 !important; transform: none !important; }
+  /* The shorts grid populates via JS; without JS hide the empty section. */
+  .channel-shorts { display: none; }
+</style></noscript>
 <style>
   :root {
     --bg: #faf6ef;
@@ -172,6 +176,95 @@
     color: var(--accent);
   }
   .feature-body em { font-style: italic; }
+
+  /* Shorts grid (auto-populated from the YouTube channel) */
+  .channel-shorts {
+    padding: 80px 0 110px;
+    border-bottom: 1px solid var(--rule);
+  }
+  @media (max-width: 720px) { .channel-shorts { padding: 60px 0 80px; } }
+  .channel-shorts-head {
+    margin-bottom: 56px;
+    text-align: center;
+  }
+  .channel-shorts-head .feature-rule {
+    margin: 0 auto 22px;
+  }
+  .channel-shorts-head h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(34px, 5vw, 56px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+  .channel-shorts-head h2 em { font-style: italic; color: var(--accent); }
+  .shorts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 18px;
+  }
+  .short {
+    position: relative;
+    aspect-ratio: 9 / 16;
+    overflow: hidden;
+    border-radius: 4px;
+    border: 1px solid var(--rule);
+    background: var(--bg-soft);
+    display: block;
+    color: var(--text);
+    transition: transform 0.35s ease;
+  }
+  .short:hover { transform: translateY(-3px); text-decoration: none; }
+  .short img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .short-play {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0.94);
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: rgba(250, 246, 239, 0.95);
+    color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  .short:hover .short-play {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  .short-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 50%, rgba(42, 31, 26, 0.92) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 14px 16px;
+  }
+  .short-eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--bg);
+    opacity: 0.85;
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+  .short-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1.25;
+    color: var(--bg);
+  }
+  @media (max-width: 720px) {
+    .shorts-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+  }
+  @media (max-width: 480px) {
+    .shorts-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .short-title { font-size: 13px; }
+  }
 
   /* Pull-quote */
   .pullquote {
@@ -491,6 +584,24 @@
     </div>
   </section>
 
+  <section class="channel-shorts">
+    <div class="container">
+      <div class="channel-shorts-head reveal">
+        <div class="feature-rule"></div>
+        <div class="feature-eyebrow">From the channel</div>
+        <h2>Latest <em>shorts</em>.</h2>
+      </div>
+      <div class="shorts-grid reveal" aria-label="Latest YouTube shorts">
+        <!--
+          AUTO-POPULATED by the script below from the latest videos on
+          youtube.com/@bulchandanis (channel_id UC2mYnTY24YEInuQ5N8Tdj2w).
+          To pin specific shorts, drop <a class="short">…</a> cards in here
+          and the auto-loader will skip the populate.
+        -->
+      </div>
+    </div>
+  </section>
+
   <section class="outro">
     <div class="container">
       <h3 class="reveal">More on the way. Until then,<br>the channel is where it lives.</h3>
@@ -525,19 +636,65 @@
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
   })();
 
-  // Fetch the real YouTube title for any [data-yt-id] film card via noembed
-  // (CORS-enabled, no API key). If it fails, the placeholder text stays.
+  // Auto-load latest videos from the YouTube channel via RSS (rss2json proxy,
+  // no API key). Populates the .shorts-grid below the films section, and
+  // also overwrites the featured film title with its real YouTube title.
+  // Channel ID is durable — change CHANNEL_ID below to use a different channel.
   (function() {
-    document.querySelectorAll('.film[data-yt-id]').forEach(card => {
-      const id = card.getAttribute('data-yt-id');
-      if (!id) return;
-      const titleEl = card.querySelector('.film-title');
-      if (!titleEl) return;
-      fetch('https://noembed.com/embed?url=' + encodeURIComponent('https://www.youtube.com/watch?v=' + id))
-        .then(r => r.json())
-        .then(d => { if (d && d.title) titleEl.textContent = d.title; })
-        .catch(() => {});
-    });
+    const CHANNEL_ID = 'UC2mYnTY24YEInuQ5N8Tdj2w';
+    const FEATURED_ID = 'FtZAujssLPc';
+    const RSS_URL = 'https://www.youtube.com/feeds/videos.xml?channel_id=' + CHANNEL_ID;
+    const PROXY = 'https://api.rss2json.com/v1/api.json?rss_url=';
+
+    function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]); }
+    function extractId(url) {
+      const u = String(url);
+      const m = u.match(/[?&]v=([A-Za-z0-9_\-]+)/) || u.match(/\/shorts\/([A-Za-z0-9_\-]+)/) || u.match(/youtu\.be\/([A-Za-z0-9_\-]+)/);
+      return m ? m[1] : null;
+    }
+    function renderCard(s, i) {
+      const num = String(i + 1).padStart(2, '0');
+      const safeTitle = escapeHtml(s.title);
+      return (
+        '<a class="short" href="https://www.youtube.com/watch?v=' + s.id + '" target="_blank" rel="noopener" aria-label="Watch ' + safeTitle + ' on YouTube (opens in a new tab)">' +
+          '<img src="https://img.youtube.com/vi/' + s.id + '/hq720.jpg" alt="" loading="lazy" onerror="this.onerror=null;this.src=\'https://img.youtube.com/vi/' + s.id + '/hqdefault.jpg\'">' +
+          '<span class="short-play" aria-hidden="true">▶</span>' +
+          '<div class="short-overlay">' +
+            '<div class="short-eyebrow">№ ' + num + '</div>' +
+            '<div class="short-title">' + safeTitle + '</div>' +
+          '</div>' +
+        '</a>'
+      );
+    }
+    async function init() {
+      let items = [];
+      try {
+        const res = await fetch(PROXY + encodeURIComponent(RSS_URL), { cache: 'no-store' });
+        const data = await res.json();
+        if (data.status === 'ok' && Array.isArray(data.items)) {
+          items = data.items.map(it => ({ id: extractId(it.link), title: it.title || '', link: it.link })).filter(i => i.id);
+        }
+      } catch (e) { console.warn('Could not load shorts from YouTube RSS:', e); }
+
+      const featured = items.find(i => i.id === FEATURED_ID);
+      if (featured) {
+        const t = document.querySelector('.film--featured .film-title');
+        if (t) t.textContent = featured.title;
+      }
+
+      const grid = document.querySelector('.shorts-grid');
+      if (!grid) return;
+      if (grid.querySelector('.short')) return; // manual cards present
+      const shorts = items.filter(i => i.id !== FEATURED_ID);
+      if (!shorts.length) {
+        const sec = document.querySelector('.channel-shorts');
+        if (sec) sec.style.display = 'none';
+        return;
+      }
+      grid.innerHTML = shorts.map(renderCard).join('');
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
   })();
 </script>
 </body>

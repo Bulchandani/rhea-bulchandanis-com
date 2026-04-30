@@ -8,7 +8,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap">
-<noscript><style>.reveal { opacity: 1 !important; transform: none !important; }</style></noscript>
+<noscript><style>
+  .reveal { opacity: 1 !important; transform: none !important; }
+  .channel-shorts { display: none; }
+</style></noscript>
 <style>
   :root {
     --bg: #0a0908;
@@ -365,6 +368,104 @@
   @media (max-width: 880px) { .film--small { grid-column: span 6; } }
   @media (max-width: 540px) { .film--small { grid-column: 1; } }
 
+  /* === SHORTS GRID (auto-populated from YouTube channel) === */
+  .channel-shorts {
+    padding: 80px 0 110px;
+    border-top: 4px solid var(--accent);
+    background: var(--bg);
+  }
+  @media (max-width: 720px) { .channel-shorts { padding: 60px 0 80px; } }
+  .channel-shorts-head {
+    margin-bottom: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .channel-shorts-head h2 {
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    font-size: clamp(48px, 7vw, 96px);
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+  .channel-shorts-head h2 em { font-style: italic; color: var(--accent); }
+  .shorts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 18px;
+  }
+  .short {
+    position: relative;
+    aspect-ratio: 9 / 16;
+    overflow: hidden;
+    background: var(--gray);
+    border: 2px solid var(--bg);
+    display: block;
+    color: var(--text);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+  .short:hover {
+    transform: translate(-3px, -3px);
+    border-color: var(--accent);
+    box-shadow: 6px 6px 0 var(--accent);
+    text-decoration: none;
+  }
+  .short img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .short-play {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0.94);
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  .short:hover .short-play {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  .short-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 50%, rgba(10, 9, 8, 0.95) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 14px 16px;
+  }
+  .short-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .short-title {
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.05;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  @media (max-width: 720px) {
+    .shorts-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+  }
+  @media (max-width: 480px) {
+    .shorts-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .short-title { font-size: 15px; }
+  }
+
   /* === OUTRO === */
   .outro {
     padding: 120px 0;
@@ -592,6 +693,23 @@
     </div>
   </section>
 
+  <section class="channel-shorts">
+    <div class="container">
+      <div class="channel-shorts-head">
+        <h2 class="reveal">Latest <em>shorts</em>.</h2>
+        <a class="films-link reveal" data-delay="1" href="https://www.youtube.com/@bulchandanis/shorts" target="_blank" rel="noopener" aria-label="See all shorts on YouTube (opens in a new tab)">All shorts →</a>
+      </div>
+      <div class="shorts-grid reveal" aria-label="Latest YouTube shorts">
+        <!--
+          AUTO-POPULATED by the script below from the latest videos on
+          youtube.com/@bulchandanis (channel_id UC2mYnTY24YEInuQ5N8Tdj2w).
+          To pin specific shorts, drop <a class="short">…</a> cards in here
+          and the auto-loader will skip the populate.
+        -->
+      </div>
+    </div>
+  </section>
+
   <section class="outro">
     <div class="container">
       <h3 class="reveal">More <em>coming</em>.<br>Until then —</h3>
@@ -626,19 +744,64 @@
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
   })();
 
-  // Fetch the real YouTube title for any [data-yt-id] film card via noembed
-  // (CORS-enabled, no API key). If it fails, the placeholder text stays.
+  // Auto-load latest videos from the YouTube channel via RSS (rss2json proxy,
+  // no API key). Populates the .shorts-grid below the films section, and
+  // also overwrites the featured film title with its real YouTube title.
   (function() {
-    document.querySelectorAll('.film[data-yt-id]').forEach(card => {
-      const id = card.getAttribute('data-yt-id');
-      if (!id) return;
-      const titleEl = card.querySelector('.film-title');
-      if (!titleEl) return;
-      fetch('https://noembed.com/embed?url=' + encodeURIComponent('https://www.youtube.com/watch?v=' + id))
-        .then(r => r.json())
-        .then(d => { if (d && d.title) titleEl.textContent = d.title; })
-        .catch(() => {});
-    });
+    const CHANNEL_ID = 'UC2mYnTY24YEInuQ5N8Tdj2w';
+    const FEATURED_ID = 'FtZAujssLPc';
+    const RSS_URL = 'https://www.youtube.com/feeds/videos.xml?channel_id=' + CHANNEL_ID;
+    const PROXY = 'https://api.rss2json.com/v1/api.json?rss_url=';
+
+    function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]); }
+    function extractId(url) {
+      const u = String(url);
+      const m = u.match(/[?&]v=([A-Za-z0-9_\-]+)/) || u.match(/\/shorts\/([A-Za-z0-9_\-]+)/) || u.match(/youtu\.be\/([A-Za-z0-9_\-]+)/);
+      return m ? m[1] : null;
+    }
+    function renderCard(s, i) {
+      const num = String(i + 1).padStart(2, '0');
+      const safeTitle = escapeHtml(s.title);
+      return (
+        '<a class="short" href="https://www.youtube.com/watch?v=' + s.id + '" target="_blank" rel="noopener" aria-label="Watch ' + safeTitle + ' on YouTube (opens in a new tab)">' +
+          '<img src="https://img.youtube.com/vi/' + s.id + '/hq720.jpg" alt="" loading="lazy" onerror="this.onerror=null;this.src=\'https://img.youtube.com/vi/' + s.id + '/hqdefault.jpg\'">' +
+          '<span class="short-play" aria-hidden="true">▶</span>' +
+          '<div class="short-overlay">' +
+            '<div class="short-eyebrow">№ ' + num + '</div>' +
+            '<div class="short-title">' + safeTitle + '</div>' +
+          '</div>' +
+        '</a>'
+      );
+    }
+    async function init() {
+      let items = [];
+      try {
+        const res = await fetch(PROXY + encodeURIComponent(RSS_URL), { cache: 'no-store' });
+        const data = await res.json();
+        if (data.status === 'ok' && Array.isArray(data.items)) {
+          items = data.items.map(it => ({ id: extractId(it.link), title: it.title || '', link: it.link })).filter(i => i.id);
+        }
+      } catch (e) { console.warn('Could not load shorts from YouTube RSS:', e); }
+
+      const featured = items.find(i => i.id === FEATURED_ID);
+      if (featured) {
+        const t = document.querySelector('.film--featured .film-title');
+        if (t) t.textContent = featured.title;
+      }
+
+      const grid = document.querySelector('.shorts-grid');
+      if (!grid) return;
+      if (grid.querySelector('.short')) return;
+      const shorts = items.filter(i => i.id !== FEATURED_ID);
+      if (!shorts.length) {
+        const sec = document.querySelector('.channel-shorts');
+        if (sec) sec.style.display = 'none';
+        return;
+      }
+      grid.innerHTML = shorts.map(renderCard).join('');
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
   })();
 </script>
 </body>

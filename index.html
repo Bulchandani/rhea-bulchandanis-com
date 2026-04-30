@@ -365,53 +365,15 @@
     margin-top: 6px;
   }
   .shorts-title em { font-style: italic; color: var(--accent); }
-  .shorts-nav {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-  .shorts-handle {
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-right: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.16em;
-  }
-  .shorts-btn {
-    width: 44px; height: 44px;
-    border-radius: 50%;
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-size: 18px;
-    line-height: 1;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
-    font-family: inherit;
-  }
-  .shorts-btn:hover {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: var(--bg);
-    transform: scale(1.06);
-  }
-  .shorts-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-  .shorts-carousel { position: relative; }
-  .shorts-viewport {
-    overflow: hidden;
-    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 3%, black 97%, transparent 100%);
-    mask-image: linear-gradient(to right, transparent 0%, black 3%, black 97%, transparent 100%);
-  }
-  .shorts-track {
-    display: flex;
-    gap: 16px;
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: transform;
+  /* Shorts grid — replaces the previous carousel.
+     All shorts visible at once, responsive columns. */
+  .shorts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 18px;
   }
   .short {
-    flex: 0 0 240px;
+    width: 100%;
     aspect-ratio: 9 / 16;
     position: relative;
     overflow: hidden;
@@ -488,15 +450,14 @@
     background: var(--accent);
   }
   @media (max-width: 720px) {
-    .short { flex: 0 0 200px; border-radius: 8px; }
+    .shorts-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+    .short { border-radius: 8px; }
     .shorts-header { gap: 12px; }
   }
   @media (max-width: 480px) {
-    .short { flex: 0 0 168px; }
+    .shorts-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
     .short-title { font-size: 13px; }
     .short-overlay { padding: 12px 14px; }
-    .shorts-btn { width: 40px; height: 40px; }
-    .shorts-handle { display: none; }
   }
 
   /* === CTA / OUTRO === */
@@ -688,35 +649,29 @@
             <div class="work-eyebrow">@bulchandanis on YouTube</div>
             <h3 class="shorts-title">Latest <em>shorts</em>.</h3>
           </div>
-          <div class="shorts-nav reveal" data-delay="1">
-            <span class="shorts-handle">drag · swipe · auto</span>
-            <button class="shorts-btn shorts-prev" type="button" aria-label="Previous short">‹</button>
-            <button class="shorts-btn shorts-next" type="button" aria-label="Next short">›</button>
-          </div>
+          <a class="work-link reveal" data-delay="1" href="https://www.youtube.com/@bulchandanis/shorts" target="_blank" rel="noopener" aria-label="See all shorts on YouTube (opens in a new tab)">All shorts →</a>
         </div>
 
-        <div class="shorts-carousel reveal" aria-label="Latest YouTube shorts" tabindex="0">
-          <div class="shorts-viewport">
-            <div class="shorts-track">
-              <!--
-                AUTO-POPULATED by the script below from the latest videos on
-                youtube.com/user/bulchandanis (via RSS through rss2json — no API key).
+        <div class="shorts-grid reveal" aria-label="Latest YouTube shorts">
+          <!--
+            AUTO-POPULATED by the script below from the latest videos on
+            youtube.com/@bulchandanis (channel_id UC2mYnTY24YEInuQ5N8Tdj2w)
+            via RSS through rss2json — no API key needed.
 
-                If you want to PIN specific shorts manually instead of auto-loading,
-                paste one or more cards like this inside .shorts-track and comment out
-                the loadShorts() call in the script:
+            The grid shows all videos returned by the feed (typically the 10 most
+            recent). To PIN specific shorts manually, paste cards like this inside
+            .shorts-grid — the auto-loader detects the manual cards and skips
+            populating, so your hand-picked list takes over:
 
-                <a class="short" href="https://www.youtube.com/shorts/VIDEO_ID" target="_blank" rel="noopener" data-yt-id="VIDEO_ID" aria-label="Watch this short on YouTube (opens in a new tab)">
-                  <div class="short-fallback">R</div>
-                  <span class="short-play" aria-hidden="true">▶</span>
-                  <div class="short-overlay">
-                    <div class="short-eyebrow">№ 01</div>
-                    <div class="short-title">Short title here.</div>
-                  </div>
-                </a>
-              -->
-            </div>
-          </div>
+            <a class="short" href="https://www.youtube.com/shorts/VIDEO_ID" target="_blank" rel="noopener" aria-label="Watch this short on YouTube (opens in a new tab)">
+              <img src="https://img.youtube.com/vi/VIDEO_ID/hq720.jpg" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;">
+              <span class="short-play" aria-hidden="true">▶</span>
+              <div class="short-overlay">
+                <div class="short-eyebrow">№ 01</div>
+                <div class="short-title">Short title here.</div>
+              </div>
+            </a>
+          -->
         </div>
       </div>
     </div>
@@ -799,21 +754,22 @@
     });
   })();
 
-  // Shorts: auto-load latest videos from the YouTube channel via RSS,
-  // then init the carousel with the populated cards.
+  // Shorts: auto-load the latest videos from the YouTube channel via RSS,
+  // populate them into a responsive grid (no hardcoded URLs).
   //
-  // The RSS feed is fetched through rss2json (free public proxy, no API key).
-  // If it fails (rate limit, network, or YouTube changes the feed format),
-  // we hide the carousel section gracefully so the page still looks good.
+  // Fetched through rss2json (free public proxy — no API key, no `count` param
+  // since that requires a paid plan). Returns the 10 most recent videos by
+  // default, which is enough for the grid.
   //
-  // To use a different channel, change RSS_URL below. The legacy `?user=`
-  // form works for accounts that still have a /user/ URL on YouTube; for
-  // newer accounts you'll need the channel ID (UC...) and `?channel_id=`.
+  // Channel ID is used (rather than the legacy /user/ handle) so this keeps
+  // working even if YouTube migrates the channel to a different URL.
+  // To swap channels, replace CHANNEL_ID below — view-source on any YouTube
+  // page for the channel and search for "externalId" or "channelId".
   (function() {
     const FEATURED_ID = 'FtZAujssLPc';
-    const RSS_URL = 'https://www.youtube.com/feeds/videos.xml?user=bulchandanis';
+    const CHANNEL_ID = 'UC2mYnTY24YEInuQ5N8Tdj2w';
+    const RSS_URL = 'https://www.youtube.com/feeds/videos.xml?channel_id=' + CHANNEL_ID;
     const PROXY = 'https://api.rss2json.com/v1/api.json?rss_url=';
-    const MAX_ITEMS = 12;
 
     function escapeHtml(s) {
       return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
@@ -823,111 +779,37 @@
       const m = u.match(/[?&]v=([A-Za-z0-9_\-]+)/) || u.match(/\/shorts\/([A-Za-z0-9_\-]+)/) || u.match(/\/embed\/([A-Za-z0-9_\-]+)/) || u.match(/youtu\.be\/([A-Za-z0-9_\-]+)/);
       return m ? m[1] : null;
     }
-
-    function initCarousel() {
-      const carousel = document.querySelector('.shorts-carousel');
-      if (!carousel) return;
-      const viewport = carousel.querySelector('.shorts-viewport');
-      const track = carousel.querySelector('.shorts-track');
-      const cards = Array.from(track.children);
-      const prevBtn = document.querySelector('.shorts-prev');
-      const nextBtn = document.querySelector('.shorts-next');
-      if (cards.length === 0) return;
-
-      let index = 0;
-      let timer = null;
-      let userInteracted = false;
-      const ROTATE_MS = 4500;
-      const RESUME_MS = 9000;
-
-      function getStep() {
-        if (cards.length < 2) return 0;
-        return cards[1].offsetLeft - cards[0].offsetLeft;
-      }
-      function getMaxIndex() {
-        const cardWidth = cards[0].getBoundingClientRect().width;
-        const visible = Math.max(1, Math.floor(viewport.clientWidth / cardWidth));
-        return Math.max(0, cards.length - visible);
-      }
-      function update() {
-        track.style.transform = 'translateX(' + (-index * getStep()) + 'px)';
-      }
-      function next() {
-        const max = getMaxIndex();
-        index = (index >= max) ? 0 : index + 1;
-        update();
-      }
-      function prev() {
-        const max = getMaxIndex();
-        index = (index <= 0) ? max : index - 1;
-        update();
-      }
-      function startAuto() {
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-        stopAuto();
-        timer = setInterval(next, ROTATE_MS);
-      }
-      function stopAuto() {
-        if (timer) { clearInterval(timer); timer = null; }
-      }
-      function userBreak() {
-        userInteracted = true;
-        stopAuto();
-        clearTimeout(window.__shortsResume);
-        window.__shortsResume = setTimeout(startAuto, RESUME_MS);
-      }
-
-      if (prevBtn) prevBtn.addEventListener('click', () => { userBreak(); prev(); });
-      if (nextBtn) nextBtn.addEventListener('click', () => { userBreak(); next(); });
-
-      carousel.addEventListener('mouseenter', stopAuto);
-      carousel.addEventListener('mouseleave', () => { if (!userInteracted) startAuto(); });
-      carousel.addEventListener('focusin', stopAuto);
-
-      let touchStart = null;
-      track.addEventListener('touchstart', (e) => {
-        touchStart = e.touches[0].clientX;
-        stopAuto();
-      }, { passive: true });
-      track.addEventListener('touchend', (e) => {
-        if (touchStart === null) return;
-        const dx = e.changedTouches[0].clientX - touchStart;
-        if (Math.abs(dx) > 40) {
-          userBreak();
-          if (dx < 0) next(); else prev();
-        }
-        touchStart = null;
-      });
-
-      let resizeTimer;
-      window.addEventListener('resize', () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-          const max = getMaxIndex();
-          if (index > max) index = max;
-          update();
-        }, 150);
-      });
-
-      startAuto();
-    }
-
     function hideShortsSection() {
       const section = document.querySelector('.shorts-section');
       if (section) section.style.display = 'none';
     }
 
     async function loadFromRSS() {
-      const url = PROXY + encodeURIComponent(RSS_URL) + '&count=' + MAX_ITEMS;
+      const url = PROXY + encodeURIComponent(RSS_URL);
       const res = await fetch(url, { cache: 'no-store' });
       if (!res.ok) throw new Error('RSS fetch HTTP ' + res.status);
       const data = await res.json();
       if (data.status !== 'ok' || !Array.isArray(data.items) || data.items.length === 0) {
-        throw new Error('Unexpected RSS response');
+        throw new Error('Unexpected RSS response: ' + (data.message || ''));
       }
       return data.items
         .map(item => ({ id: extractId(item.link), title: item.title || '', link: item.link }))
         .filter(item => item.id);
+    }
+
+    function renderCard(s, i) {
+      const num = String(i + 1).padStart(2, '0');
+      const safeTitle = escapeHtml(s.title);
+      return (
+        '<a class="short" href="https://www.youtube.com/watch?v=' + s.id + '" target="_blank" rel="noopener" aria-label="Watch ' + safeTitle + ' on YouTube (opens in a new tab)">' +
+          '<img src="https://img.youtube.com/vi/' + s.id + '/hq720.jpg" alt="" loading="lazy" onerror="this.onerror=null;this.src=\'https://img.youtube.com/vi/' + s.id + '/hqdefault.jpg\'" style="width:100%;height:100%;object-fit:cover;display:block;">' +
+          '<span class="short-play" aria-hidden="true">▶</span>' +
+          '<div class="short-overlay">' +
+            '<div class="short-eyebrow">№ ' + num + '</div>' +
+            '<div class="short-title">' + safeTitle + '</div>' +
+          '</div>' +
+        '</a>'
+      );
     }
 
     async function init() {
@@ -938,7 +820,7 @@
         console.warn('Could not auto-load shorts from YouTube RSS:', err);
       }
 
-      // Update the featured card title with the real video title if we have it
+      // Update featured film title with real YouTube title if available
       const featuredCard = document.querySelector('.film--featured');
       if (featuredCard) {
         const titleEl = featuredCard.querySelector('.film-title');
@@ -946,38 +828,18 @@
         if (titleEl && featured && featured.title) titleEl.textContent = featured.title;
       }
 
-      // If the track already has manual cards inside (not just the comment),
-      // skip the dynamic populate and just init the carousel.
-      const track = document.querySelector('.shorts-track');
-      const hasManual = track && track.querySelector('.short');
+      // Populate shorts grid (skip if user pinned manual cards)
+      const grid = document.querySelector('.shorts-grid');
+      if (!grid) return;
+      const hasManual = grid.querySelector('.short');
+      if (hasManual) return;
 
-      if (track && !hasManual) {
-        const shorts = items.filter(i => i.id !== FEATURED_ID).slice(0, MAX_ITEMS);
-        if (shorts.length > 0) {
-          track.innerHTML = shorts.map((s, i) => {
-            const num = String(i + 1).padStart(2, '0');
-            const safeTitle = escapeHtml(s.title);
-            return (
-              '<a class="short" href="https://www.youtube.com/watch?v=' + s.id + '" target="_blank" rel="noopener" aria-label="Watch ' + safeTitle + ' on YouTube (opens in a new tab)">' +
-                '<img src="https://img.youtube.com/vi/' + s.id + '/hq720.jpg" alt="" loading="lazy" onerror="this.onerror=null;this.src=\'https://img.youtube.com/vi/' + s.id + '/hqdefault.jpg\'" style="width:100%;height:100%;object-fit:cover;display:block;">' +
-                '<span class="short-play" aria-hidden="true">▶</span>' +
-                '<div class="short-overlay">' +
-                  '<div class="short-eyebrow">№ ' + num + '</div>' +
-                  '<div class="short-title">' + safeTitle + '</div>' +
-                '</div>' +
-              '</a>'
-            );
-          }).join('');
-        } else {
-          // Fetch failed / nothing returned and no manual cards — hide section
-          hideShortsSection();
-          return;
-        }
-      } else if (track && hasManual) {
-        // Manual cards present — leave them, just init carousel
+      const shorts = items.filter(i => i.id !== FEATURED_ID);
+      if (shorts.length === 0) {
+        hideShortsSection();
+        return;
       }
-
-      initCarousel();
+      grid.innerHTML = shorts.map(renderCard).join('');
     }
 
     if (document.readyState === 'loading') {
