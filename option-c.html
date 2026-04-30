@@ -100,12 +100,16 @@
   .hero-name {
     font-family: 'Anton', sans-serif;
     font-weight: 400;
-    font-size: clamp(80px, 24vw, 380px);
-    line-height: 0.82;
+    /* Sized to fit "BULCHANDANI" (11 chars) inside the container at every
+       viewport. Going larger overflows the right edge and clips letters. */
+    font-size: clamp(54px, 16vw, 240px);
+    line-height: 0.86;
     letter-spacing: -0.04em;
     color: var(--text);
     text-transform: uppercase;
     margin: 0;
+    word-break: keep-all;
+    overflow-wrap: normal;
   }
   .hero-name .accent {
     color: var(--accent);
