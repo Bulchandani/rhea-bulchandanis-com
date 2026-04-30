@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Rhea Bulchandani — filmmaker, writer, performer.">
+<title>Rhea Bulchandani — Films &amp; Stories (Editorial preview)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500;600&family=Caveat:wght@500&display=swap">
+<noscript><style>.reveal { opacity: 1 !important; transform: none !important; }</style></noscript>
+<style>
+  :root {
+    --bg: #faf6ef;
+    --bg-soft: #f3ede2;
+    --text: #2a1f1a;
+    --text-soft: #5b4d44;
+    --text-muted: #918073;
+    --rule: #d8cfc0;
+    --accent: hsl(355, 55%, 42%);
+    --maxw: 1140px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Fraunces', 'Georgia', serif;
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--text);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  a { color: var(--text); text-decoration: none; }
+  :focus { outline: none; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+  .container { max-width: var(--maxw); margin: 0 auto; padding: 0 32px; }
+  main { flex: 1; }
+
+  /* === MASTHEAD === */
+  .masthead {
+    border-bottom: 1px solid var(--rule);
+    padding: 22px 0;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.32em;
+    color: var(--text-muted);
+  }
+  .masthead-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .masthead a { color: var(--text-muted); transition: color 0.2s ease; }
+  .masthead a:hover { color: var(--text); text-decoration: none; }
+  .masthead .issue { color: var(--accent); font-weight: 500; }
+
+  /* === HERO === */
+  .hero {
+    padding: 80px 0 100px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  @media (max-width: 880px) { .hero-grid { grid-template-columns: 1fr; gap: 48px; } }
+  .hero-eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.32em;
+    color: var(--accent);
+    margin-bottom: 28px;
+    font-weight: 500;
+  }
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(54px, 8.5vw, 112px);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    margin-bottom: 32px;
+    color: var(--text);
+  }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .hero-deck {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: clamp(20px, 2.4vw, 26px);
+    line-height: 1.4;
+    color: var(--text-soft);
+    max-width: 30ch;
+    font-weight: 400;
+  }
+  .hero-portrait {
+    position: relative;
+    aspect-ratio: 4/5;
+    overflow: hidden;
+    border-radius: 4px;
+  }
+  .hero-portrait img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: sepia(0.08) saturate(0.95);
+  }
+  .hero-portrait .caption {
+    position: absolute; bottom: -32px; right: 0;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--text-muted);
+  }
+
+  /* === FEATURE / ABOUT === */
+  .feature {
+    padding: 100px 0 80px;
+  }
+  @media (max-width: 720px) { .feature { padding: 60px 0; } }
+  .feature-rule {
+    width: 60px;
+    height: 1px;
+    background: var(--accent);
+    margin-bottom: 22px;
+  }
+  .feature-eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.32em;
+    color: var(--accent);
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+  .feature h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(36px, 5.5vw, 64px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    max-width: 16ch;
+    margin-bottom: 60px;
+  }
+  .feature h2 em { font-style: italic; color: var(--accent); }
+  .feature-body {
+    column-count: 2;
+    column-gap: 56px;
+    max-width: 880px;
+  }
+  @media (max-width: 720px) { .feature-body { column-count: 1; } }
+  .feature-body p {
+    font-size: 18.5px;
+    line-height: 1.75;
+    margin-bottom: 18px;
+    color: var(--text);
+  }
+  .feature-body p:first-child::first-letter {
+    font-family: 'Fraunces', serif;
+    float: left;
+    font-size: 5em;
+    line-height: 0.85;
+    margin: 0.05em 0.1em 0 0;
+    font-weight: 400;
+    color: var(--accent);
+  }
+  .feature-body em { font-style: italic; }
+
+  /* Pull-quote */
+  .pullquote {
+    margin: 80px auto;
+    max-width: 880px;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(28px, 3.5vw, 40px);
+    line-height: 1.3;
+    color: var(--text);
+    text-align: center;
+    position: relative;
+    padding: 50px 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .pullquote::before {
+    content: '"';
+    position: absolute;
+    top: -10px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg);
+    padding: 0 14px;
+    font-size: 60px;
+    line-height: 1;
+    color: var(--accent);
+    font-style: normal;
+  }
+
+  /* === FILMS === */
+  .films {
+    padding: 80px 0 120px;
+    background: var(--bg-soft);
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  @media (max-width: 720px) { .films { padding: 60px 0 80px; } }
+  .films-header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+  .films-eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.32em;
+    color: var(--accent);
+    font-weight: 500;
+    margin-bottom: 18px;
+  }
+  .films h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(36px, 5.5vw, 60px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+  .films h2 em { font-style: italic; color: var(--accent); }
+
+  .films-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 24px;
+  }
+  @media (max-width: 880px) { .films-grid { grid-template-columns: repeat(6, 1fr); } }
+  @media (max-width: 540px) { .films-grid { grid-template-columns: 1fr; } }
+
+  .film {
+    display: block;
+    transition: transform 0.4s ease;
+  }
+  .film:hover { transform: translateY(-3px); text-decoration: none; }
+  .film-thumb {
+    aspect-ratio: 16/9;
+    background: var(--bg);
+    border: 1px solid var(--rule);
+    margin-bottom: 14px;
+    overflow: hidden;
+    position: relative;
+    border-radius: 4px;
+  }
+  .film-thumb-fallback {
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, var(--accent), hsl(20, 70%, 60%));
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.85);
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 36px;
+  }
+  .film-number {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .film-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 1.25;
+    color: var(--text);
+    letter-spacing: -0.01em;
+    margin-bottom: 6px;
+  }
+  .film-meta {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+
+  .film--featured {
+    grid-column: span 12;
+  }
+  .film--featured .film-thumb { aspect-ratio: 21/9; }
+  .film--featured .film-title {
+    font-size: clamp(28px, 4vw, 44px);
+    max-width: 18ch;
+  }
+  .film--small { grid-column: span 4; }
+  @media (max-width: 880px) { .film--small { grid-column: span 6; } }
+  @media (max-width: 540px) { .film--small { grid-column: 1; } }
+
+  /* === SIGNATURE / OUTRO === */
+  .outro {
+    padding: 110px 0;
+    text-align: center;
+  }
+  @media (max-width: 720px) { .outro { padding: 70px 0; } }
+  .outro h3 {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(28px, 4vw, 44px);
+    line-height: 1.3;
+    max-width: 22ch;
+    margin: 0 auto 28px;
+    color: var(--text);
+  }
+  .outro-cta {
+    display: inline-block;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.24em;
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 4px;
+    color: var(--accent);
+    transition: opacity 0.2s ease;
+    font-weight: 500;
+  }
+  .outro-cta:hover { text-decoration: none; opacity: 0.7; }
+  .signature {
+    margin-top: 50px;
+    font-family: 'Caveat', cursive;
+    font-size: 32px;
+    color: var(--text-soft);
+    transform: rotate(-3deg);
+    display: inline-block;
+  }
+
+  /* === FOOTER === */
+  .site-footer {
+    border-top: 1px solid var(--rule);
+    padding: 28px 0;
+    margin-top: auto;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.24em;
+    color: var(--text-muted);
+  }
+  .footer-inner {
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  }
+  .site-footer a { color: var(--text-muted); transition: color 0.2s ease; }
+  .site-footer a:hover { color: var(--accent); }
+
+  /* Reveal */
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .reveal.is-visible { opacity: 1; transform: translateY(0); }
+  .reveal[data-delay="1"] { transition-delay: 0.1s; }
+  .reveal[data-delay="2"] { transition-delay: 0.2s; }
+  .reveal[data-delay="3"] { transition-delay: 0.3s; }
+
+  /* Preview switcher */
+  .preview-switcher {
+    position: fixed;
+    bottom: 20px; right: 20px;
+    background: var(--text);
+    border-radius: 999px;
+    padding: 6px;
+    display: flex;
+    gap: 4px;
+    z-index: 100;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  }
+  .preview-switcher a {
+    padding: 8px 14px;
+    border-radius: 999px;
+    color: var(--bg);
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .preview-switcher a:hover { background: rgba(255,255,255,0.1); text-decoration: none; }
+  .preview-switcher a.active { background: var(--accent); color: var(--bg); }
+
+  /* === Mobile polish === */
+  @media (max-width: 540px) {
+    .container { padding-left: 20px; padding-right: 20px; }
+    .preview-switcher { bottom: 12px; right: 12px; padding: 4px; gap: 2px; }
+    .preview-switcher a { padding: 6px 10px; font-size: 10px; letter-spacing: 0.06em; }
+    .feature-body p:first-child::first-letter { font-size: 4em; }
+    .pullquote { padding: 36px 0; margin: 50px auto; }
+    .hero-portrait .caption { bottom: -26px; font-size: 10px; }
+  }
+  @media (max-width: 380px) {
+    .preview-switcher a { padding: 5px 8px; font-size: 9.5px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="container masthead-inner">
+    <a href="https://bulchandanis.com">← bulchandanis</a>
+    <span class="issue">Vol. 1 · Issue One</span>
+    <span>Rhea Bulchandani</span>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="hero-eyebrow reveal">Films · Words · The in-between</div>
+        <h1 class="reveal" data-delay="1">Rhea<br><em>Bulchandani.</em></h1>
+        <p class="hero-deck reveal" data-delay="2">Filmmaker, writer, and performer making things — short films, written work, performances — that follow the small moments other people don't always tell.</p>
+      </div>
+      <div class="hero-portrait reveal" data-delay="1">
+        <img src="assets/rhea.jpg" alt="" loading="eager">
+        <div class="caption">— Photograph</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature">
+    <div class="container">
+      <div class="reveal">
+        <div class="feature-rule"></div>
+        <div class="feature-eyebrow">A Note from the Maker</div>
+        <h2>Stories worth <em>telling</em>.</h2>
+      </div>
+      <div class="feature-body reveal" data-delay="1">
+        <p>I make things — short films, written work, performances — that explore characters, ideas, and the small moments that don't always get told. The work tends to start with a feeling, then becomes a question, then becomes something you can <em>watch</em> or <em>read</em>.</p>
+        <p>A proper site is on the way, and it'll have all of it organised. While I build it, the <em>YouTube channel</em> is where you'll find what I've been working on. Some of it is finished, some is rough — both kinds get put up.</p>
+      </div>
+
+      <blockquote class="pullquote reveal">
+        Most of what I make starts with a small thing<br>nobody else seems to notice.
+      </blockquote>
+    </div>
+  </section>
+
+  <section class="films">
+    <div class="container">
+      <div class="films-header reveal">
+        <div class="films-eyebrow">Selected films</div>
+        <h2>Recent <em>work</em>.</h2>
+      </div>
+
+      <div class="films-grid">
+        <a class="film film--featured reveal" href="https://www.youtube.com/user/bulchandanis" target="_blank" rel="noopener">
+          <div class="film-thumb">
+            <div class="film-thumb-fallback">R</div>
+          </div>
+          <div class="film-number">№ 01 · <em>featured</em></div>
+          <div class="film-title">Title of your featured film goes here.</div>
+          <div class="film-meta">2026 · Short film</div>
+        </a>
+
+        <a class="film film--small reveal" data-delay="1" href="https://www.youtube.com/user/bulchandanis" target="_blank" rel="noopener">
+          <div class="film-thumb">
+            <div class="film-thumb-fallback">R</div>
+          </div>
+          <div class="film-number">№ 02</div>
+          <div class="film-title">Second film title.</div>
+          <div class="film-meta">2025</div>
+        </a>
+
+        <a class="film film--small reveal" data-delay="2" href="https://www.youtube.com/user/bulchandanis" target="_blank" rel="noopener">
+          <div class="film-thumb">
+            <div class="film-thumb-fallback">R</div>
+          </div>
+          <div class="film-number">№ 03</div>
+          <div class="film-title">Third film title.</div>
+          <div class="film-meta">2025</div>
+        </a>
+
+        <a class="film film--small reveal" data-delay="3" href="https://www.youtube.com/user/bulchandanis" target="_blank" rel="noopener">
+          <div class="film-thumb">
+            <div class="film-thumb-fallback">R</div>
+          </div>
+          <div class="film-number">№ 04</div>
+          <div class="film-title">Fourth film title.</div>
+          <div class="film-meta">2024</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="outro">
+    <div class="container">
+      <h3 class="reveal">More on the way. Until then,<br>the channel is where it lives.</h3>
+      <a class="outro-cta reveal" data-delay="1" href="https://www.youtube.com/user/bulchandanis" target="_blank" rel="noopener">Watch on YouTube</a>
+      <div class="signature reveal" data-delay="2">— Rhea</div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <span>&copy; <span id="year"></span> Rhea Bulchandani</span>
+    <span><a href="https://bulchandanis.com">bulchandanis.com</a></span>
+  </div>
+</footer>
+
+<div class="preview-switcher" aria-label="Design previews">
+  <a href="index.html">A · Cinematic</a>
+  <a href="option-b.html" class="active">B · Editorial</a>
+  <a href="option-c.html">C · Maximalist</a>
+</div>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+  (function() {
+    if (!('IntersectionObserver' in window)) { document.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible')); return; }
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) { entry.target.classList.add('is-visible'); obs.unobserve(entry.target); }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+  })();
+</script>
+</body>
+</html>
