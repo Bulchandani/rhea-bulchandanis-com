@@ -456,41 +456,37 @@
       </div>
 
       <div class="films-grid">
-        <a class="film film--featured reveal" href="https://www.youtube.com/user/bulchandanis" target="_blank" rel="noopener">
+        <!--
+          FEATURED FILM. The thumbnail is loaded directly from img.youtube.com.
+          The title is overwritten by the small script at the bottom of the page
+          which fetches the real title from YouTube via noembed (no API key).
+        -->
+        <a class="film film--featured reveal" href="https://www.youtube.com/watch?v=FtZAujssLPc" target="_blank" rel="noopener" data-yt-id="FtZAujssLPc" aria-label="Watch the featured film on YouTube (opens in a new tab)">
           <div class="film-thumb">
-            <div class="film-thumb-fallback">R</div>
+            <img src="https://img.youtube.com/vi/FtZAujssLPc/maxresdefault.jpg" alt="" loading="eager" onerror="this.onerror=null;this.src='https://img.youtube.com/vi/FtZAujssLPc/hqdefault.jpg'" style="width:100%;height:100%;object-fit:cover;display:block;">
           </div>
           <div class="film-number">№ 01 · <em>featured</em></div>
-          <div class="film-title">Title of your featured film goes here.</div>
-          <div class="film-meta">2026 · Short film</div>
+          <div class="film-title">On the channel.</div>
+          <div class="film-meta">Short film · YouTube</div>
         </a>
 
-        <a class="film film--small reveal" data-delay="1" href="https://www.youtube.com/user/bulchandanis" target="_blank" rel="noopener">
-          <div class="film-thumb">
-            <div class="film-thumb-fallback">R</div>
-          </div>
-          <div class="film-number">№ 02</div>
-          <div class="film-title">Second film title.</div>
-          <div class="film-meta">2025</div>
-        </a>
+        <!--
+          ADDITIONAL FILM SLOTS — hidden by default while there's only one main
+          film. To bring any of these back, move the block out of this comment,
+          set href / data-yt-id / film-title / film-meta to real values, and the
+          thumbnail will load automatically.
 
-        <a class="film film--small reveal" data-delay="2" href="https://www.youtube.com/user/bulchandanis" target="_blank" rel="noopener">
-          <div class="film-thumb">
-            <div class="film-thumb-fallback">R</div>
-          </div>
-          <div class="film-number">№ 03</div>
-          <div class="film-title">Third film title.</div>
-          <div class="film-meta">2025</div>
-        </a>
-
-        <a class="film film--small reveal" data-delay="3" href="https://www.youtube.com/user/bulchandanis" target="_blank" rel="noopener">
-          <div class="film-thumb">
-            <div class="film-thumb-fallback">R</div>
-          </div>
-          <div class="film-number">№ 04</div>
-          <div class="film-title">Fourth film title.</div>
-          <div class="film-meta">2024</div>
-        </a>
+          <a class="film film--small reveal" data-delay="1" href="https://www.youtube.com/watch?v=VIDEO_ID" target="_blank" rel="noopener" data-yt-id="VIDEO_ID">
+            <div class="film-thumb">
+              <img src="https://img.youtube.com/vi/VIDEO_ID/maxresdefault.jpg" alt="" loading="lazy" onerror="this.onerror=null;this.src='https://img.youtube.com/vi/VIDEO_ID/hqdefault.jpg'" style="width:100%;height:100%;object-fit:cover;display:block;">
+            </div>
+            <div class="film-number">№ 02</div>
+            <div class="film-title">Film title.</div>
+            <div class="film-meta">2025</div>
+          </a>
+          <a class="film film--small reveal" data-delay="2" href="..." data-yt-id="..."> ... </a>
+          <a class="film film--small reveal" data-delay="3" href="..." data-yt-id="..."> ... </a>
+        -->
       </div>
     </div>
   </section>
@@ -527,6 +523,21 @@
       });
     }, { threshold: 0.12 });
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+  })();
+
+  // Fetch the real YouTube title for any [data-yt-id] film card via noembed
+  // (CORS-enabled, no API key). If it fails, the placeholder text stays.
+  (function() {
+    document.querySelectorAll('.film[data-yt-id]').forEach(card => {
+      const id = card.getAttribute('data-yt-id');
+      if (!id) return;
+      const titleEl = card.querySelector('.film-title');
+      if (!titleEl) return;
+      fetch('https://noembed.com/embed?url=' + encodeURIComponent('https://www.youtube.com/watch?v=' + id))
+        .then(r => r.json())
+        .then(d => { if (d && d.title) titleEl.textContent = d.title; })
+        .catch(() => {});
+    });
   })();
 </script>
 </body>

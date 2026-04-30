@@ -13,7 +13,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap">
-<noscript><style>.reveal { opacity: 1 !important; transform: none !important; }</style></noscript>
+<noscript><style>
+  .reveal { opacity: 1 !important; transform: none !important; }
+  /* Without JS the dynamic carousel can't populate, so hide the empty section. */
+  .shorts-section { display: none; }
+</style></noscript>
 
 <style>
   :root {
@@ -663,20 +667,17 @@
       </div>
 
       <!--
-        TO ADD VIDEOS:
-        1. Get the video ID from a YouTube URL:
-           Regular video → https://www.youtube.com/watch?v=VIDEO_ID
-           Short → https://www.youtube.com/shorts/SHORT_ID
-        2. Replace "REPLACE_WITH_VIDEO_ID" below with the actual ID
-        3. Update href and the title/meta fields
+        FEATURED VIDEO: Set the data-yt-id below to the YouTube video ID
+        (the part after "?v=" in a watch URL, or after "/shorts/" for a short).
+        The thumbnail and title auto-populate via the script at the bottom.
       -->
 
-      <a class="film film--featured reveal" href="https://www.youtube.com/user/bulchandanis" target="_blank" rel="noopener" data-yt-id="REPLACE_WITH_FEATURED_VIDEO_ID" aria-label="Featured film (opens YouTube in a new tab)">
+      <a class="film film--featured reveal" href="https://www.youtube.com/watch?v=FtZAujssLPc" target="_blank" rel="noopener" data-yt-id="FtZAujssLPc" aria-label="Watch the featured film on YouTube (opens in a new tab)">
         <div class="thumb-fallback">R</div>
         <span class="film-play" aria-hidden="true">▶</span>
         <div class="film-overlay">
           <div class="film-eyebrow">Featured</div>
-          <h3 class="film-title">Title of your featured film goes here.</h3>
+          <h3 class="film-title">On the channel.</h3>
           <div class="film-meta">Short film · YouTube</div>
         </div>
       </a>
@@ -697,61 +698,23 @@
         <div class="shorts-carousel reveal" aria-label="Latest YouTube shorts" tabindex="0">
           <div class="shorts-viewport">
             <div class="shorts-track">
+              <!--
+                AUTO-POPULATED by the script below from the latest videos on
+                youtube.com/user/bulchandanis (via RSS through rss2json — no API key).
 
-              <a class="short" href="https://www.youtube.com/user/bulchandanis" target="_blank" rel="noopener" data-yt-id="REPLACE_WITH_SHORT_ID_1" aria-label="Watch short 1 (opens in a new tab)">
-                <div class="short-fallback">R</div>
-                <span class="short-play" aria-hidden="true">▶</span>
-                <div class="short-overlay">
-                  <div class="short-eyebrow">№ 01</div>
-                  <div class="short-title">Short title here.</div>
-                </div>
-              </a>
+                If you want to PIN specific shorts manually instead of auto-loading,
+                paste one or more cards like this inside .shorts-track and comment out
+                the loadShorts() call in the script:
 
-              <a class="short" href="https://www.youtube.com/user/bulchandanis" target="_blank" rel="noopener" data-yt-id="REPLACE_WITH_SHORT_ID_2" aria-label="Watch short 2 (opens in a new tab)">
-                <div class="short-fallback">R</div>
-                <span class="short-play" aria-hidden="true">▶</span>
-                <div class="short-overlay">
-                  <div class="short-eyebrow">№ 02</div>
-                  <div class="short-title">Short title here.</div>
-                </div>
-              </a>
-
-              <a class="short" href="https://www.youtube.com/user/bulchandanis" target="_blank" rel="noopener" data-yt-id="REPLACE_WITH_SHORT_ID_3" aria-label="Watch short 3 (opens in a new tab)">
-                <div class="short-fallback">R</div>
-                <span class="short-play" aria-hidden="true">▶</span>
-                <div class="short-overlay">
-                  <div class="short-eyebrow">№ 03</div>
-                  <div class="short-title">Short title here.</div>
-                </div>
-              </a>
-
-              <a class="short" href="https://www.youtube.com/user/bulchandanis" target="_blank" rel="noopener" data-yt-id="REPLACE_WITH_SHORT_ID_4" aria-label="Watch short 4 (opens in a new tab)">
-                <div class="short-fallback">R</div>
-                <span class="short-play" aria-hidden="true">▶</span>
-                <div class="short-overlay">
-                  <div class="short-eyebrow">№ 04</div>
-                  <div class="short-title">Short title here.</div>
-                </div>
-              </a>
-
-              <a class="short" href="https://www.youtube.com/user/bulchandanis" target="_blank" rel="noopener" data-yt-id="REPLACE_WITH_SHORT_ID_5" aria-label="Watch short 5 (opens in a new tab)">
-                <div class="short-fallback">R</div>
-                <span class="short-play" aria-hidden="true">▶</span>
-                <div class="short-overlay">
-                  <div class="short-eyebrow">№ 05</div>
-                  <div class="short-title">Short title here.</div>
-                </div>
-              </a>
-
-              <a class="short" href="https://www.youtube.com/user/bulchandanis" target="_blank" rel="noopener" data-yt-id="REPLACE_WITH_SHORT_ID_6" aria-label="Watch short 6 (opens in a new tab)">
-                <div class="short-fallback">R</div>
-                <span class="short-play" aria-hidden="true">▶</span>
-                <div class="short-overlay">
-                  <div class="short-eyebrow">№ 06</div>
-                  <div class="short-title">Short title here.</div>
-                </div>
-              </a>
-
+                <a class="short" href="https://www.youtube.com/shorts/VIDEO_ID" target="_blank" rel="noopener" data-yt-id="VIDEO_ID" aria-label="Watch this short on YouTube (opens in a new tab)">
+                  <div class="short-fallback">R</div>
+                  <span class="short-play" aria-hidden="true">▶</span>
+                  <div class="short-overlay">
+                    <div class="short-eyebrow">№ 01</div>
+                    <div class="short-title">Short title here.</div>
+                  </div>
+                </a>
+              -->
             </div>
           </div>
         </div>
@@ -836,95 +799,192 @@
     });
   })();
 
-  // Shorts carousel — auto-rotate, manual nav, touch swipe
+  // Shorts: auto-load latest videos from the YouTube channel via RSS,
+  // then init the carousel with the populated cards.
+  //
+  // The RSS feed is fetched through rss2json (free public proxy, no API key).
+  // If it fails (rate limit, network, or YouTube changes the feed format),
+  // we hide the carousel section gracefully so the page still looks good.
+  //
+  // To use a different channel, change RSS_URL below. The legacy `?user=`
+  // form works for accounts that still have a /user/ URL on YouTube; for
+  // newer accounts you'll need the channel ID (UC...) and `?channel_id=`.
   (function() {
-    const carousel = document.querySelector('.shorts-carousel');
-    if (!carousel) return;
-    const viewport = carousel.querySelector('.shorts-viewport');
-    const track = carousel.querySelector('.shorts-track');
-    const cards = Array.from(track.children);
-    const prevBtn = document.querySelector('.shorts-prev');
-    const nextBtn = document.querySelector('.shorts-next');
-    if (cards.length === 0) return;
+    const FEATURED_ID = 'FtZAujssLPc';
+    const RSS_URL = 'https://www.youtube.com/feeds/videos.xml?user=bulchandanis';
+    const PROXY = 'https://api.rss2json.com/v1/api.json?rss_url=';
+    const MAX_ITEMS = 12;
 
-    let index = 0;
-    let timer = null;
-    let userInteracted = false;
-    const ROTATE_MS = 4500;
-    const RESUME_MS = 9000;
-
-    function getStep() {
-      if (cards.length < 2) return 0;
-      return cards[1].offsetLeft - cards[0].offsetLeft;
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
     }
-    function getMaxIndex() {
-      const cardWidth = cards[0].getBoundingClientRect().width;
-      const visible = Math.max(1, Math.floor(viewport.clientWidth / cardWidth));
-      return Math.max(0, cards.length - visible);
-    }
-    function update() {
-      track.style.transform = 'translateX(' + (-index * getStep()) + 'px)';
-    }
-    function next() {
-      const max = getMaxIndex();
-      index = (index >= max) ? 0 : index + 1;
-      update();
-    }
-    function prev() {
-      const max = getMaxIndex();
-      index = (index <= 0) ? max : index - 1;
-      update();
-    }
-    function startAuto() {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      stopAuto();
-      timer = setInterval(next, ROTATE_MS);
-    }
-    function stopAuto() {
-      if (timer) { clearInterval(timer); timer = null; }
-    }
-    function userBreak() {
-      userInteracted = true;
-      stopAuto();
-      clearTimeout(window.__shortsResume);
-      window.__shortsResume = setTimeout(startAuto, RESUME_MS);
+    function extractId(url) {
+      const u = String(url);
+      const m = u.match(/[?&]v=([A-Za-z0-9_\-]+)/) || u.match(/\/shorts\/([A-Za-z0-9_\-]+)/) || u.match(/\/embed\/([A-Za-z0-9_\-]+)/) || u.match(/youtu\.be\/([A-Za-z0-9_\-]+)/);
+      return m ? m[1] : null;
     }
 
-    if (prevBtn) prevBtn.addEventListener('click', () => { userBreak(); prev(); });
-    if (nextBtn) nextBtn.addEventListener('click', () => { userBreak(); next(); });
+    function initCarousel() {
+      const carousel = document.querySelector('.shorts-carousel');
+      if (!carousel) return;
+      const viewport = carousel.querySelector('.shorts-viewport');
+      const track = carousel.querySelector('.shorts-track');
+      const cards = Array.from(track.children);
+      const prevBtn = document.querySelector('.shorts-prev');
+      const nextBtn = document.querySelector('.shorts-next');
+      if (cards.length === 0) return;
 
-    carousel.addEventListener('mouseenter', stopAuto);
-    carousel.addEventListener('mouseleave', () => { if (!userInteracted) startAuto(); });
-    carousel.addEventListener('focusin', stopAuto);
+      let index = 0;
+      let timer = null;
+      let userInteracted = false;
+      const ROTATE_MS = 4500;
+      const RESUME_MS = 9000;
 
-    // Touch swipe
-    let touchStart = null;
-    track.addEventListener('touchstart', (e) => {
-      touchStart = e.touches[0].clientX;
-      stopAuto();
-    }, { passive: true });
-    track.addEventListener('touchend', (e) => {
-      if (touchStart === null) return;
-      const dx = e.changedTouches[0].clientX - touchStart;
-      if (Math.abs(dx) > 40) {
-        userBreak();
-        if (dx < 0) next(); else prev();
+      function getStep() {
+        if (cards.length < 2) return 0;
+        return cards[1].offsetLeft - cards[0].offsetLeft;
       }
-      touchStart = null;
-    });
-
-    // Resize handler — recompute step + clamp index
-    let resizeTimer;
-    window.addEventListener('resize', () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
+      function getMaxIndex() {
+        const cardWidth = cards[0].getBoundingClientRect().width;
+        const visible = Math.max(1, Math.floor(viewport.clientWidth / cardWidth));
+        return Math.max(0, cards.length - visible);
+      }
+      function update() {
+        track.style.transform = 'translateX(' + (-index * getStep()) + 'px)';
+      }
+      function next() {
         const max = getMaxIndex();
-        if (index > max) index = max;
+        index = (index >= max) ? 0 : index + 1;
         update();
-      }, 150);
-    });
+      }
+      function prev() {
+        const max = getMaxIndex();
+        index = (index <= 0) ? max : index - 1;
+        update();
+      }
+      function startAuto() {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        stopAuto();
+        timer = setInterval(next, ROTATE_MS);
+      }
+      function stopAuto() {
+        if (timer) { clearInterval(timer); timer = null; }
+      }
+      function userBreak() {
+        userInteracted = true;
+        stopAuto();
+        clearTimeout(window.__shortsResume);
+        window.__shortsResume = setTimeout(startAuto, RESUME_MS);
+      }
 
-    startAuto();
+      if (prevBtn) prevBtn.addEventListener('click', () => { userBreak(); prev(); });
+      if (nextBtn) nextBtn.addEventListener('click', () => { userBreak(); next(); });
+
+      carousel.addEventListener('mouseenter', stopAuto);
+      carousel.addEventListener('mouseleave', () => { if (!userInteracted) startAuto(); });
+      carousel.addEventListener('focusin', stopAuto);
+
+      let touchStart = null;
+      track.addEventListener('touchstart', (e) => {
+        touchStart = e.touches[0].clientX;
+        stopAuto();
+      }, { passive: true });
+      track.addEventListener('touchend', (e) => {
+        if (touchStart === null) return;
+        const dx = e.changedTouches[0].clientX - touchStart;
+        if (Math.abs(dx) > 40) {
+          userBreak();
+          if (dx < 0) next(); else prev();
+        }
+        touchStart = null;
+      });
+
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          const max = getMaxIndex();
+          if (index > max) index = max;
+          update();
+        }, 150);
+      });
+
+      startAuto();
+    }
+
+    function hideShortsSection() {
+      const section = document.querySelector('.shorts-section');
+      if (section) section.style.display = 'none';
+    }
+
+    async function loadFromRSS() {
+      const url = PROXY + encodeURIComponent(RSS_URL) + '&count=' + MAX_ITEMS;
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) throw new Error('RSS fetch HTTP ' + res.status);
+      const data = await res.json();
+      if (data.status !== 'ok' || !Array.isArray(data.items) || data.items.length === 0) {
+        throw new Error('Unexpected RSS response');
+      }
+      return data.items
+        .map(item => ({ id: extractId(item.link), title: item.title || '', link: item.link }))
+        .filter(item => item.id);
+    }
+
+    async function init() {
+      let items = [];
+      try {
+        items = await loadFromRSS();
+      } catch (err) {
+        console.warn('Could not auto-load shorts from YouTube RSS:', err);
+      }
+
+      // Update the featured card title with the real video title if we have it
+      const featuredCard = document.querySelector('.film--featured');
+      if (featuredCard) {
+        const titleEl = featuredCard.querySelector('.film-title');
+        const featured = items.find(i => i.id === FEATURED_ID);
+        if (titleEl && featured && featured.title) titleEl.textContent = featured.title;
+      }
+
+      // If the track already has manual cards inside (not just the comment),
+      // skip the dynamic populate and just init the carousel.
+      const track = document.querySelector('.shorts-track');
+      const hasManual = track && track.querySelector('.short');
+
+      if (track && !hasManual) {
+        const shorts = items.filter(i => i.id !== FEATURED_ID).slice(0, MAX_ITEMS);
+        if (shorts.length > 0) {
+          track.innerHTML = shorts.map((s, i) => {
+            const num = String(i + 1).padStart(2, '0');
+            const safeTitle = escapeHtml(s.title);
+            return (
+              '<a class="short" href="https://www.youtube.com/watch?v=' + s.id + '" target="_blank" rel="noopener" aria-label="Watch ' + safeTitle + ' on YouTube (opens in a new tab)">' +
+                '<img src="https://img.youtube.com/vi/' + s.id + '/hq720.jpg" alt="" loading="lazy" onerror="this.onerror=null;this.src=\'https://img.youtube.com/vi/' + s.id + '/hqdefault.jpg\'" style="width:100%;height:100%;object-fit:cover;display:block;">' +
+                '<span class="short-play" aria-hidden="true">▶</span>' +
+                '<div class="short-overlay">' +
+                  '<div class="short-eyebrow">№ ' + num + '</div>' +
+                  '<div class="short-title">' + safeTitle + '</div>' +
+                '</div>' +
+              '</a>'
+            );
+          }).join('');
+        } else {
+          // Fetch failed / nothing returned and no manual cards — hide section
+          hideShortsSection();
+          return;
+        }
+      } else if (track && hasManual) {
+        // Manual cards present — leave them, just init carousel
+      }
+
+      initCarousel();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
   })();
 </script>
 </body>
